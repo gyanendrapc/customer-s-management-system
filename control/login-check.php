@@ -1,9 +1,9 @@
 <?php
 // starting session
 session_start();
-
+?>
+<?php
 // define variables and set to empty values
-$email = $password = "";
 function test_input($data)
 {
     $data = trim($data);
@@ -15,22 +15,31 @@ function test_input($data)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
-    $email = test_input($_POST["email"]);
+    $contact = test_input($_POST["contact"]);
     $password = test_input($_POST["password"]);
 
+    $pass = md5($password);
 
-    if (isset($_POST['customer'])) {
-
+    echo $contact . " and " . $password . "    ";
+    if (isset($_POST['vendor'])) {
         // dbcall
-        require_once './database/dbconnect.php';
-        dbconnect();
-
+        require_once '../database/dbconnect.php';
         // select query
-        $sql = "SELECT * FROM ";
-        echo "happy coding";
-    } else if ($_POST['vendor']) {
-    } else {
-        $_SESSION['alert'] = "login failed";
-        echo $_SESSION['alert'];
+
+        $sql = "SELECT * FROM vendors WHERE v_contact='$contact' AND v_password ='$pass'";
+
+        echo $sql;
+        $result = mysqli_query($conn, $sql);
+        $count  = mysqli_num_rows($result);
+        if ($count == 0) {
+            $_SESSION['message'] = "Invalid Username or Password!";
+            header('location: ../index.php');
+        } else {
+            $_SESSION['message'] = "You are successfully authenticated!";
+            echo $_SESSION['message'];
+            header('location: ../dashboard.php');
+        }
+        // echo $message;
     }
 }
+mysqli_close($conn);

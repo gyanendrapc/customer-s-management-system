@@ -1,8 +1,7 @@
 <?php
 
 
-function dbconnect()
-{
+
     $servername = "localhost";
     $username = "root";
     $password = "";
@@ -20,5 +19,4 @@ function dbconnect()
         echo "<script>alert('database connection successfull');</script>";
     }
 
-    mysqli_close($conn);
-}
+    // mysqli_close($conn);
